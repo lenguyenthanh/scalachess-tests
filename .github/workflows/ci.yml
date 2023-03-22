@@ -26,7 +26,7 @@ jobs:
     - uses: VirtusLab/scala-cli-setup@v0.1
     - name: Scalafmt check
       run: |
-        scala-cli fmt --check ulc || (
+        scala-cli fmt --check . || (
           echo "To format code run"
           echo "  scala-cli fmt ."
           exit 1

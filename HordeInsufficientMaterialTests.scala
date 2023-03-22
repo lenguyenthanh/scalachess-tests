@@ -8,23 +8,21 @@ import cats.syntax.all.*
 import cats.effect.syntax.all.*
 import fs2.*
 import fs2.io.file.Files
-import cats.kernel.Monoid
+
+import munit.CatsEffectSuite
 
 import chess.format.Fen
 import chess.format.EpdFen
 import chess.variant.*
 
-import munit.CatsEffectSuite
+import Common.given
+
 
 class HordeInsufficientMaterialTests extends CatsEffectSuite:
 
   test("insufficient material tests") {
-    run("horde_white_insufficient_material_tests.csv", Horde).assert
+    run("resources/horde_insufficient_material.csv", Horde).assert
   }
-
-  given Monoid[Boolean] with
-    def empty                           = true
-    def combine(x: Boolean, y: Boolean) = x && y
 
   private def run(file: String, variant: Variant): IO[Boolean] =
     parser(file)

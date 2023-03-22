@@ -17,7 +17,6 @@ import chess.variant.*
 
 import Common.given
 
-
 class HordeInsufficientMaterialTests extends CatsEffectSuite:
 
   test("insufficient material tests") {

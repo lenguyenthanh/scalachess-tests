@@ -19,9 +19,9 @@ import Common.given
 
 class PerftTests extends CatsEffectSuite:
 
-  override val munitTimeout = Duration(10, "hour")
+  override val munitTimeout = Duration(5, "hour")
 
-  val nodeLimits = 10_000_000L
+  val nodeLimits = Long.MaxValue
 
   test("random.perft") {
     perfts(Perft.randomPerfts, Chess960, nodeLimits)

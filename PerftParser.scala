@@ -9,21 +9,6 @@ import cats.parse.{ LocationMap, Numbers as N, Parser as P, Parser0 as P0, Rfc52
 
 import chess.format.EpdFen
 
-/**
-  * Perft parser specification
-| *
-  * perfts = comment* perft* comment* "\n"*
-  *
-  * perft -> id "\n" epd "\n" case* "\n"
-  * id -> "id " STRING
-  * epd -> "epd " EpdFen
-  * case -> "perft " INT LONG "\n"
-  *
-  * -- only support comment at the begining of the line
-  * comment = "#" STRING "\n"
-  *
-  */
-
 object PerftParser:
   def parse: String => Either[P.Error, List[Perft]] = perfts.parseAll
 
@@ -43,7 +28,6 @@ object PerftParser:
   private val perft: P[Perft]          = (id, epd, cases).mapN(Perft.apply) <* R.lf.?
   private val perfts: P0[List[Perft]]  = ignored.rep0 *> perft.rep.map(_.toList)
 
-  extension (p: P0[Any])
-    private def endWith(p1: P[Any]): P[String] = p.with1 *> (p1.string | (P.until(p1) <* p1))
+  extension (p: P0[Any]) private def endWith(p1: P[Any]): P[String] = p.with1 *> (p1.string | (P.until(p1) <* p1))
 
   extension (str: String) private def prefix: P[String] = P.string(s"$str ").endWith(R.lf)

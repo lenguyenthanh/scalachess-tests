@@ -1,0 +1,18 @@
+name: random-perft-227
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+jobs:
+  random-perft-227:
+    runs-on: "ubuntu-latest"
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: coursier/cache-action@v6
+    - uses: VirtusLab/scala-cli-setup@main
+    - name: Test
+      run: scala-cli test gen/RandomPerftTests227.scala Common.scala

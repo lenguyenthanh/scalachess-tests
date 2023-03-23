@@ -1,25 +1,21 @@
 //> using scala "3.2.2"
-//> using lib "org.typelevel::toolkit::0.0.4"
 //> using repository "https://raw.githubusercontent.com/lichess-org/lila-maven/master"
 //> using lib "org.lichess::scalachess:14.6.3"
-
-import scala.concurrent.duration.Duration
+//> using lib "com.disneystreaming::weaver-cats:0.8.1"
+//> using testFramework "weaver.framework.CatsEffect"
 
 import cats.syntax.all.*
 import cats.effect.syntax.all.*
 import cats.effect.IO
 
-import munit.CatsEffectSuite
+import weaver.*
 
 import chess.format.EpdFen
 import chess.variant.*
 
-import Perft.*
 import Common.given
 
-class PerftTests extends CatsEffectSuite:
-
-  override val munitTimeout = Duration(5, "hour")
+object PerftTests extends SimpleIOSuite:
 
   val nodeLimits = Long.MaxValue
 

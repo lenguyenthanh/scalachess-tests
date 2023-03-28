@@ -15,7 +15,7 @@ jobs:
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test HordeInsufficientMaterialTests.scala Common.scala
+      run: scala-cli test HordeInsufficientMaterialTests.scala Common.scala project.scala
   perft:
     runs-on: "ubuntu-latest"
     steps:
@@ -25,4 +25,4 @@ jobs:
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test VariantPerftTests.scala Common.scala
+      run: scala-cli test VariantPerftTests.scala Common.scala project.scala

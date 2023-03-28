@@ -1,6 +1,3 @@
-//> using scala "3.2.2"
-//> using lib "com.lihaoyi::os-lib:0.9.1"
-
 val gen = "gen"
 
 object Gen:
@@ -72,7 +69,7 @@ jobs:
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test HordeInsufficientMaterialTests.scala Common.scala
+      run: scala-cli test HordeInsufficientMaterialTests.scala Common.scala project.scala
   perft:
     runs-on: "ubuntu-latest"
     steps:
@@ -82,16 +79,10 @@ jobs:
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test VariantPerftTests.scala Common.scala
+      run: scala-cli test VariantPerftTests.scala Common.scala project.scala
 """.strip
 
 def randomScala(i: Int) = s"""
-//> using scala "3.2.2"
-//> using repository "https://raw.githubusercontent.com/lichess-org/lila-maven/master"
-//> using lib "org.lichess::scalachess:14.6.3"
-//> using lib "com.disneystreaming::weaver-cats:0.8.1"
-//> using testFramework "weaver.framework.CatsEffect"
-
 import weaver.*
 
 import chess.format.EpdFen
@@ -124,16 +115,10 @@ jobs:
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test gen/RandomPerftTests$i.scala Common.scala
+      run: scala-cli test gen/RandomPerftTests$i.scala Common.scala project.scala
 """.strip
 
 def chess960Scala(i: Int) = s"""
-//> using scala "3.2.2"
-//> using repository "https://raw.githubusercontent.com/lichess-org/lila-maven/master"
-//> using lib "org.lichess::scalachess:14.6.3"
-//> using lib "com.disneystreaming::weaver-cats:0.8.1"
-//> using testFramework "weaver.framework.CatsEffect"
-
 import weaver.*
 
 import chess.format.EpdFen
@@ -166,16 +151,10 @@ jobs:
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test gen/Chess960PerftTests$i.scala Common.scala
+      run: scala-cli test gen/Chess960PerftTests$i.scala Common.scala project.scala
 """.strip
 
 def trickyScala(i: Int) = s"""
-//> using scala "3.2.2"
-//> using repository "https://raw.githubusercontent.com/lichess-org/lila-maven/master"
-//> using lib "org.lichess::scalachess:14.6.3"
-//> using lib "com.disneystreaming::weaver-cats:0.8.1"
-//> using testFramework "weaver.framework.CatsEffect"
-
 import weaver.*
 
 import chess.format.EpdFen
@@ -208,5 +187,5 @@ jobs:
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test gen/TrickyPerftTests$i.scala Common.scala
+      run: scala-cli test gen/TrickyPerftTests$i.scala Common.scala project.scala
 """.strip

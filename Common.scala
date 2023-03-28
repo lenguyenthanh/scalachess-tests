@@ -30,7 +30,7 @@ case class Perft(id: String, epd: EpdFen, cases: List[TestCase]):
     val c = cases.last
     Result(c.depth, situation.perft(c.depth), c.result)
 
-  def max = cases.last.depth
+  def max = cases.last.result
 
 case class TestCase(depth: Int, result: Long)
 case class Result(depth: Int, result: Long, expected: Long)

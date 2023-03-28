@@ -30,6 +30,8 @@ case class Perft(id: String, epd: EpdFen, cases: List[TestCase]):
     val c = cases.last
     Result(c.depth, situation.perft(c.depth), c.result)
 
+  def max = cases.last.depth
+
 case class TestCase(depth: Int, result: Long)
 case class Result(depth: Int, result: Long, expected: Long)
 
@@ -40,17 +42,28 @@ case class DivideResult(val move: MoveOrDrop, nodes: Long) {
 
 object Perft:
 
-  lazy val threeCheckPerfts  = Perft.read("resources/3check.perft")
-  lazy val antichessPerfts   = Perft.read("resources/antichess.perft")
-  lazy val atomicPerfts      = Perft.read("resources/atomic.perft")
-  lazy val crazyhousePerfts  = Perft.read("resources/crazyhouse.perft")
-  lazy val hordePerfts       = Perft.read("resources/horde.perft")
-  lazy val racingkingsPerfts = Perft.read("resources/racingkings.perft")
-  lazy val randomPerfts      = Perft.read("resources/random.perft").grouped(16).toList
-  lazy val trickyPerfts      = Perft.read("resources/tricky.perft").grouped(9).toList
-  lazy val chess960          = Perft.read("resources/chess960.perft").grouped(18).toList
+  lazy val threeCheckPerfts  = read("resources/3check.perft")
+  lazy val antichessPerfts   = read("resources/antichess.perft")
+  lazy val atomicPerfts      = read("resources/atomic.perft")
+  lazy val crazyhousePerfts  = read("resources/crazyhouse.perft")
+  lazy val hordePerfts       = read("resources/horde.perft")
+  lazy val racingkingsPerfts = read("resources/racingkings.perft")
+  lazy val randomPerfts      = splitPerft("resources/random.perft", 16)
+  lazy val trickyPerfts      = read("resources/tricky.perft").grouped(9).toList
+  lazy val chess960          = splitPerft("resources/chess960.perft", 18)
 
-  private def read(file: String): List[Perft] =
+  def splitPerft(file: String, split: Int): List[List[Perft]] =
+    val half = split / 2
+    val all  = Perft.read(file).sortBy(_.max)
+    all
+      .zip(all.reverse)
+      .splitAt(all.size / 2)
+      ._1
+      .flatMap { case (a, b) => List(a, b) }
+      .grouped(split)
+      .toList
+
+  def read(file: String): List[Perft] =
     import cats.implicits.toShow
     val str = Source.fromFile(file).mkString
     PerftParser.parse(str).fold(ex => throw RuntimeException(s"Parsing error: $file: ${ex.show}"), identity)

@@ -53,7 +53,6 @@ object Perft:
   lazy val chess960          = splitPerft("resources/chess960.perft", 18)
 
   def splitPerft(file: String, split: Int): List[List[Perft]] =
-    val half = split / 2
     val all  = Perft.read(file).sortBy(_.max)
     all
       .zip(all.reverse)

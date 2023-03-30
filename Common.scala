@@ -42,15 +42,18 @@ case class DivideResult(val move: MoveOrDrop, nodes: Long) {
 
 object Perft:
 
+  val randomSplit   = 11
+  val chess960Split = 17
+
   lazy val threeCheckPerfts  = read("resources/3check.perft")
   lazy val antichessPerfts   = read("resources/antichess.perft")
   lazy val atomicPerfts      = read("resources/atomic.perft")
   lazy val crazyhousePerfts  = read("resources/crazyhouse.perft")
   lazy val hordePerfts       = read("resources/horde.perft")
   lazy val racingkingsPerfts = read("resources/racingkings.perft")
-  lazy val randomPerfts      = splitPerft("resources/random.perft", 16)
+  lazy val randomPerfts      = splitPerft("resources/random.perft", randomSplit)
   lazy val trickyPerfts      = read("resources/tricky.perft").grouped(9).toList
-  lazy val chess960          = splitPerft("resources/chess960.perft", 18)
+  lazy val chess960          = splitPerft("resources/chess960.perft", chess960Split)
 
   def splitPerft(file: String, split: Int): List[List[Perft]] =
     val all = Perft.read(file).sortBy(_.max)

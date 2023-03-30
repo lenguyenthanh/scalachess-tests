@@ -2,6 +2,7 @@ val gen = "gen"
 
 object Gen:
 
+  import Perft.*
   def main(args: Array[String]): Unit =
     cleanup()
     write(os.pwd / ".github" / "workflows" / "ci.yml", ci)
@@ -14,11 +15,11 @@ object Gen:
     os.remove.all(os.pwd / gen)
 
   def genRandomTests(): Unit =
-    val size = 6838 / 16
+    val size = 6838 / randomSplit
     (0 to size).foreach(genRandomTests)
 
   def genChess960Tests(): Unit =
-    val size = 960 / 18
+    val size = 960 / chess960Split
     (0 to size).foreach(genChess960Tests)
 
   def genTrickyTests(): Unit =

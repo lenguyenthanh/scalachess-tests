@@ -1,0 +1,18 @@
+name: random-perft-464
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+jobs:
+  random-perft-464:
+    runs-on: "ubuntu-latest"
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: coursier/cache-action@v6
+    - uses: VirtusLab/scala-cli-setup@main
+    - name: Test
+      run: scala-cli test gen/RandomPerftTests464.scala Common.scala project.scala

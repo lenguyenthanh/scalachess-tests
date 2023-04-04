@@ -5,7 +5,8 @@ object Gen:
   import Perft.*
   def main(args: Array[String]): Unit =
     cleanup()
-    write(os.pwd / ".github" / "workflows" / "ci.yml", ci)
+    write(os.pwd / ".github" / "workflows" / "insufficient.yml", insufficient)
+    write(os.pwd / ".github" / "workflows" / "variant.yml", variant)
     genRandomTests()
     genChess960Tests()
     genTrickyTests()
@@ -52,8 +53,8 @@ object Gen:
   private def write(path: os.Path, content: String): Unit =
     os.write(path, content, createFolders = true)
 
-val ci = """
-name: CI
+val insufficient = """
+name: insufficient
 on:
   push:
     branches:
@@ -71,6 +72,16 @@ jobs:
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
       run: scala-cli test HordeInsufficientMaterialTests.scala Common.scala project.scala
+""".strip
+
+val variant = """
+name: variant
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
   perft:
     runs-on: "ubuntu-latest"
     steps:

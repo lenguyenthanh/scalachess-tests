@@ -1,0 +1,18 @@
+name: insufficient
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+jobs:
+  hord-insufficient-material:
+    runs-on: "ubuntu-latest"
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: coursier/cache-action@v6
+    - uses: VirtusLab/scala-cli-setup@main
+    - name: Test
+      run: scala-cli test HordeInsufficientMaterialTests.scala Common.scala project.scala

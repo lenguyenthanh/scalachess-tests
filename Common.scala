@@ -23,16 +23,10 @@ import cats.effect.syntax.all.*
 import cats.effect.IO
 
 case class Perft(id: String, epd: EpdFen, cases: List[TestCase]):
-  import Perft.*
-  def calculate(variant: Variant): Result =
-    val situation =
-      Fen.read(variant, epd).getOrElse { throw RuntimeException(s"Invalid fen: $epd for variant: $variant") }
-    val c = cases.last
-    Result(c.depth, situation.perft(c.depth), c.result)
 
-  def max = cases.last.result
+  def max = cases.last.nodes
 
-case class TestCase(depth: Int, result: Long)
+case class TestCase(depth: Int, nodes: Long)
 case class Result(depth: Int, result: Long, expected: Long)
 
 case class DivideResult(val move: MoveOrDrop, nodes: Long) {
@@ -72,48 +66,31 @@ object Perft:
 
   import Common.given
   def perfts(perfts: List[Perft], variant: Variant): IO[Boolean] =
-    perfts.parFoldMapA(perftTestIO(_, variant))
+    perfts.parFoldMapA(perft(_, variant))
 
-  private def perftTestIO(perft: Perft, variant: Variant): IO[Boolean] =
+  private def perft(perft: Perft, variant: Variant): IO[Boolean] =
     val situation = Fen.read(variant, perft.epd).getOrElse {
       throw RuntimeException(s"Invalid fen: ${perft.epd} for variant: $variant")
     }
-    val c = perft.cases.last
-    situation
-      .perftIO(c.depth)
-      .map(result =>
-        println(s"Perft ${perft.id} ${perft.epd} ${c.depth} $result ${result == c.result}")
-        result == c.result
-      )
-
-  private def perftTest(perft: Perft, variant: Variant): Boolean =
-    val situation =
-      Fen.read(variant, perft.epd).getOrElse {
-        throw RuntimeException(s"Invalid fen: ${perft.epd} for variant: $variant")
-      }
-    val c = perft.cases.last
-    val result = situation
-      .perft(c.depth)
-    println(s"Perft ${perft.id} ${perft.epd} ${c.depth} $result ${result == c.result}")
-    result == c.result
+    perft.cases.parFoldMapA(c =>
+      situation
+        .perft(c.depth)
+        .map(result =>
+          if result != c.nodes then
+            println(s"Error: ${perft.id} ${perft.epd} depth: ${c.depth} expected: ${c.nodes} result: $result")
+          result == c.nodes
+        )
+    )
 
   extension (s: Situation)
 
-    def perftIO(depth: Int): IO[Long] =
+    def perft(depth: Int): IO[Long] =
       if depth == 0 then IO(1L)
       else if s.perftEnd then IO(0L)
       else
         val moves = s.perftMoves
         if depth == 1 then moves.size.toLong.pure[IO]
-        else moves.foldMapA(_.situationAfter.perftIO(depth - 1))
-
-    def perft(depth: Int): Long =
-      if depth == 0 then 1L
-      else if s.perftEnd then 0L
-      else
-        val moves = s.perftMoves
-        if depth == 1 then moves.size.toLong
-        else moves.map(_.situationAfter.perft(depth - 1)).sum
+        else moves.foldMapA(_.situationAfter.perft(depth - 1))
 
     private def perftMoves: List[MoveOrDrop] =
       if s.board.variant == chess.variant.Crazyhouse

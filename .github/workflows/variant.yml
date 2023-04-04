@@ -18,14 +18,7 @@ jobs:
           skip_after_successful_duplicate: 'true'
           paths_ignore: '["**/README.md"'
           do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
-name: variant
-on:
-  push:
-    branches:
-    - main
-  pull_request:
-
-  perft:
+perft:
     runs-on: "ubuntu-latest"
     steps:
     - uses: actions/checkout@v3

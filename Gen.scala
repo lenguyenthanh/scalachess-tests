@@ -91,13 +91,6 @@ val insufficient = """
 """
 
 val variant = """
-name: variant
-on:
-  push:
-    branches:
-    - main
-  pull_request:
-
   perft:
     runs-on: "ubuntu-latest"
     steps:

@@ -5,8 +5,8 @@ object Gen:
   import Perft.*
   def main(args: Array[String]): Unit =
     cleanup()
-    write(os.pwd / ".github" / "workflows" / "insufficient.yml", insufficient)
-    write(os.pwd / ".github" / "workflows" / "variant.yml", variant)
+    write(os.pwd / ".github" / "workflows" / "insufficient.yml", prejob("insufficient", insufficient))
+    write(os.pwd / ".github" / "workflows" / "variant.yml", prejob("variant", variant))
     genRandomTests()
     genChess960Tests()
     genTrickyTests()
@@ -53,8 +53,8 @@ object Gen:
   private def write(path: os.Path, content: String): Unit =
     os.write(path, content, createFolders = true)
 
-val insufficient = """
-name: insufficient
+def prejob(name: String, job: String) = s"""
+name: $name
 on:
   push:
     branches:
@@ -62,6 +62,22 @@ on:
   pull_request:
 
 jobs:
+  pre_job:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: $${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          concurrent_skipping: 'never'
+          skip_after_successful_duplicate: 'true'
+          paths_ignore: '["**/README.md"'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+$job
+""".strip
+
+val insufficient = """
   hord-insufficient-material:
     runs-on: "ubuntu-latest"
     steps:
@@ -72,7 +88,7 @@ jobs:
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
       run: scala-cli test HordeInsufficientMaterialTests.scala Common.scala project.scala
-""".strip
+"""
 
 val variant = """
 name: variant
@@ -109,15 +125,9 @@ object RandomPerftTests$i extends SimpleIOSuite:
   }
 """.stripLeading()
 
-def randomCi(i: Int) = s"""
-name: random-perft-$i
-on:
-  push:
-    branches:
-    - main
-  pull_request:
-
-jobs:
+def randomCi(i: Int) =
+  val name = s"random-perft-$i"
+  val ci = s"""
   random-perft-$i:
     runs-on: "ubuntu-latest"
     steps:
@@ -128,7 +138,8 @@ jobs:
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
       run: scala-cli test gen/RandomPerftTests$i.scala Common.scala project.scala
-""".strip
+"""
+  prejob(name, ci)
 
 def chess960Scala(i: Int) = s"""
 import weaver.*
@@ -145,15 +156,9 @@ object Chess960PerftTests$i extends SimpleIOSuite:
   }
 """.stripLeading()
 
-def chess960Ci(i: Int) = s"""
-name: chess960-perft-$i
-on:
-  push:
-    branches:
-    - main
-  pull_request:
-
-jobs:
+def chess960Ci(i: Int) =
+  val name = s"chess960-perft-$i"
+  val ci = s"""
   chess960-perft-$i:
     runs-on: "ubuntu-latest"
     steps:
@@ -164,7 +169,8 @@ jobs:
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
       run: scala-cli test gen/Chess960PerftTests$i.scala Common.scala project.scala
-""".strip
+"""
+  prejob(name, ci)
 
 def trickyScala(i: Int) = s"""
 import weaver.*
@@ -181,15 +187,9 @@ object TrickyPerftTests$i extends SimpleIOSuite:
   }
 """.stripLeading()
 
-def trickyCi(i: Int) = s"""
-name: tricky-perft-$i
-on:
-  push:
-    branches:
-    - main
-  pull_request:
-
-jobs:
+def trickyCi(i: Int) =
+  val name = s"tricky-perft-$i"
+  val ci = s"""
   tricky-perft-$i:
     runs-on: "ubuntu-latest"
     steps:
@@ -200,4 +200,5 @@ jobs:
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
       run: scala-cli test gen/TrickyPerftTests$i.scala Common.scala project.scala
-""".strip
+"""
+  prejob(name, ci)

@@ -70,15 +70,16 @@ jobs:
       - id: skip_check
         uses: fkirc/skip-duplicate-actions@v5
         with:
-          concurrent_skipping: 'never'
           skip_after_successful_duplicate: 'true'
-          paths_ignore: '["**/README.md"'
+          paths_ignore: '["**/README.md"]'
           do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
 $job
 """.strip
 
 val insufficient = """
   hord-insufficient-material:
+    needs: pre_job
+    if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: "ubuntu-latest"
     steps:
     - uses: actions/checkout@v3
@@ -92,6 +93,8 @@ val insufficient = """
 
 val variant = """
   perft:
+    needs: pre_job
+    if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: "ubuntu-latest"
     steps:
     - uses: actions/checkout@v3
@@ -122,6 +125,8 @@ def randomCi(i: Int) =
   val name = s"random-perft-$i"
   val ci = s"""
   random-perft-$i:
+    needs: pre_job
+    if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: "ubuntu-latest"
     steps:
     - uses: actions/checkout@v3
@@ -153,6 +158,8 @@ def chess960Ci(i: Int) =
   val name = s"chess960-perft-$i"
   val ci = s"""
   chess960-perft-$i:
+    needs: pre_job
+    if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: "ubuntu-latest"
     steps:
     - uses: actions/checkout@v3
@@ -184,6 +191,8 @@ def trickyCi(i: Int) =
   val name = s"tricky-perft-$i"
   val ci = s"""
   tricky-perft-$i:
+    needs: pre_job
+    if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: "ubuntu-latest"
     steps:
     - uses: actions/checkout@v3

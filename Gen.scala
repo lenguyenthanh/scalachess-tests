@@ -92,7 +92,7 @@ val insufficient = """
 """
 
 val variant = """
-  perft:
+  variant:
     needs: pre_job
     if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: "ubuntu-latest"
@@ -104,7 +104,7 @@ val variant = """
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
       run: scala-cli test VariantPerftTests.scala Common.scala project.scala
-""".strip
+"""
 
 def randomScala(i: Int) = s"""
 import weaver.*

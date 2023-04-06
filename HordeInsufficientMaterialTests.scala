@@ -3,6 +3,8 @@ import cats.syntax.all.*
 import cats.effect.syntax.all.*
 import fs2.*
 import fs2.io.file.Files
+import fs2.data.csv.*
+import fs2.data.csv.generic.semiauto.*
 
 import weaver.*
 
@@ -29,19 +31,13 @@ object HordeInsufficientMaterialTests extends SimpleIOSuite:
   private def parser(file: String): Stream[IO, Case] =
     Files[IO]
       .readAll(fs2.io.file.Path(file))
-      .through(csvParser)
-      .map(parseSample)
+      .through(text.utf8.decode)
+      .through(decodeWithoutHeaders[Case]())
 
-  private def csvParser[F[_]]: Pipe[F, Byte, List[String]] =
-    _.through(text.utf8Decode)
-      .through(text.lines)
-      .filter(_.nonEmpty)
-      .map(_.split(',').toList)
+  given CellDecoder[EpdFen] = CellDecoder[String].map(EpdFen(_))
+  given RowDecoder[Case]    = deriveRowDecoder
 
-  private def parseSample(sample: List[String]): Case =
-    Case(EpdFen(sample(0)), sample(1).toBoolean, sample.get(2))
-
-private case class Case(fen: EpdFen, expected: Boolean, comment: Option[String]) {
+case class Case(fen: EpdFen, expected: Boolean, comment: Option[String]) {
   def run(variant: Variant): Boolean =
     val situation = Fen.read(variant, fen).get
     Horde.hasInsufficientMaterial(situation.board, !situation.color) == expected

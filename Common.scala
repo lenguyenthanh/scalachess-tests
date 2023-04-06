@@ -132,6 +132,7 @@ object PerftParser:
   private val perft: P[Perft]          = (id, epd, cases).mapN(Perft.apply) <* R.lf.?
   private val perfts: P0[List[Perft]]  = ignored.rep0 *> perft.rep.map(_.toList)
 
-  extension (p: P0[Any]) private def endWith(p1: P[Any]): P[String] = p.with1 *> (p1.string | (P.until(p1) <* p1))
+  extension (p: P0[Any])
+    private def endWith(p1: P[Any]): P[String] = p.with1 *> (p1.string | (P.until(p1) <* p1))
 
   extension (str: String) private def prefix: P[String] = P.string(s"$str ").endWith(R.lf)

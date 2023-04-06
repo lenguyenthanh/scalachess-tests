@@ -57,6 +57,8 @@ def prejob(name: String, job: String) = s"""
 name: $name
 on:
   push:
+    paths-ignore:
+      - 'README.md'
     branches:
     - main
   pull_request:

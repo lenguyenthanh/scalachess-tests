@@ -23,7 +23,6 @@ import cats.effect.syntax.all.*
 import cats.effect.IO
 
 case class Perft(id: String, epd: EpdFen, cases: List[TestCase]):
-
   def max = cases.last.nodes
 
 case class TestCase(depth: Int, nodes: Long)

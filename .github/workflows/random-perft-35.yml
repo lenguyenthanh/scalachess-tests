@@ -1,6 +1,8 @@
 name: random-perft-35
 on:
   push:
+    paths-ignore:
+      - 'README.md'
     branches:
     - main
   pull_request:

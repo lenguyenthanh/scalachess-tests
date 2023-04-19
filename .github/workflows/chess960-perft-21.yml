@@ -1,6 +1,8 @@
 name: chess960-perft-21
 on:
   push:
+    paths-ignore:
+      - 'README.md'
     branches:
     - main
   pull_request:

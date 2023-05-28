@@ -1,4 +1,4 @@
-//> using scala "3.3.0-RC5"
+//> using scala "3.3.1-RC1"
 //> using repository "https://raw.githubusercontent.com/lichess-org/lila-maven/master"
 //> using lib "org.lichess::scalachess:15.2.1"
 //> using lib "org.typelevel::toolkit::latest.release"

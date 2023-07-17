@@ -1,4 +1,4 @@
-import cats.kernel.Monoid
+import cats.Monoid
 
 object Common:
   given Monoid[Boolean] with

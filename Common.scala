@@ -28,10 +28,9 @@ case class Perft(id: String, epd: EpdFen, cases: List[TestCase]):
 case class TestCase(depth: Int, nodes: Long)
 case class Result(depth: Int, result: Long, expected: Long)
 
-case class DivideResult(val move: MoveOrDrop, nodes: Long) {
+case class DivideResult(val move: MoveOrDrop, nodes: Long):
   override def toString(): String =
     s"${move.toUci.uci} $nodes"
-}
 
 object Perft:
 
@@ -68,18 +67,16 @@ object Perft:
     perfts.parFoldMapA(perft(_, variant))
 
   private def perft(perft: Perft, variant: Variant): IO[Boolean] =
-    val situation = Fen.read(variant, perft.epd).getOrElse {
+    val situation = Fen.read(variant, perft.epd).getOrElse:
       throw RuntimeException(s"Invalid fen: ${perft.epd} for variant: $variant")
-    }
-    perft.cases.parFoldMapA(c =>
+
+    perft.cases.parFoldMapA:c =>
       situation
         .perft(c.depth)
-        .map(result =>
+        .map:result =>
           if result != c.nodes then
             println(s"Error: ${perft.id} ${perft.epd} depth: ${c.depth} expected: ${c.nodes} result: $result")
           result == c.nodes
-        )
-    )
 
   extension (s: Situation)
 

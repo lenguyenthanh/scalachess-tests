@@ -18,4 +18,4 @@ jobs:
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test gen/RandomPerftTests340.scala Common.scala project.scala
+      run: scala-cli test -j 21 gen/RandomPerftTests340.scala Common.scala project.scala

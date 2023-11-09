@@ -77,7 +77,7 @@ val insufficient = """
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test HordeInsufficientMaterialTests.scala Common.scala project.scala
+      run: scala-cli test -j 21 HordeInsufficientMaterialTests.scala Common.scala project.scala
 """
 
 val variant = """
@@ -90,7 +90,7 @@ val variant = """
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test VariantPerftTests.scala Common.scala project.scala
+      run: scala-cli test -j 21 VariantPerftTests.scala Common.scala project.scala
 """
 
 def randomScala(i: Int) = s"""
@@ -120,7 +120,7 @@ def randomCi(i: Int) =
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test gen/RandomPerftTests$i.scala Common.scala project.scala
+      run: scala-cli test -j 21 gen/RandomPerftTests$i.scala Common.scala project.scala
 """
   prejob(name, ci)
 
@@ -151,7 +151,7 @@ def chess960Ci(i: Int) =
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test gen/Chess960PerftTests$i.scala Common.scala project.scala
+      run: scala-cli test -j 21 gen/Chess960PerftTests$i.scala Common.scala project.scala
 """
   prejob(name, ci)
 
@@ -182,6 +182,6 @@ def trickyCi(i: Int) =
     - uses: coursier/cache-action@v6
     - uses: VirtusLab/scala-cli-setup@main
     - name: Test
-      run: scala-cli test gen/TrickyPerftTests$i.scala Common.scala project.scala
+      run: scala-cli test -j 21 gen/TrickyPerftTests$i.scala Common.scala project.scala
 """
   prejob(name, ci)

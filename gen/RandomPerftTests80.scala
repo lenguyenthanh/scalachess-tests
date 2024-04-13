@@ -1,6 +1,6 @@
 import weaver.*
 
-import chess.format.EpdFen
+import chess.format.FullFen
 import chess.variant.*
 
 object RandomPerftTests80 extends SimpleIOSuite:

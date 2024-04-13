@@ -10,7 +10,7 @@ object Common:
     def combine(x: Long, y: Long) = x + y
 
 import scala.io.Source
-import chess.format.EpdFen
+import chess.format.FullFen
 import chess.variant.Chess960
 import chess.variant.Variant
 import chess.variant.Crazyhouse
@@ -22,7 +22,7 @@ import cats.syntax.all.*
 import cats.effect.syntax.all.*
 import cats.effect.IO
 
-case class Perft(id: String, epd: EpdFen, cases: List[TestCase]):
+case class Perft(id: String, epd: FullFen, cases: List[TestCase]):
   def max = cases.last.nodes
 
 case class TestCase(depth: Int, nodes: Long)
@@ -107,7 +107,7 @@ object Perft:
 import cats.syntax.all.*
 import cats.parse.{ LocationMap, Numbers as N, Parser as P, Parser0 as P0, Rfc5234 as R }
 
-import chess.format.EpdFen
+import chess.format.FullFen
 
 object PerftParser:
   def parse: String => Either[P.Error, List[Perft]] = perfts.parseAll
@@ -120,7 +120,7 @@ object PerftParser:
   private val ignored = (comment | blank).void
 
   private val id: P[String]  = "id".prefix
-  private val epd: P[EpdFen] = "epd".prefix.map(EpdFen.clean)
+  private val epd: P[FullFen] = "epd".prefix.map(FullFen.clean)
   private val testCase: P[TestCase] =
     ((nonNegative.map(_.toInt) <* P.char(' ')) ~ nonNegative.map(_.toLong)).map(TestCase.apply)
   private val oneTestCase: P[TestCase] = P.string("perft ") *> testCase <* R.lf.?

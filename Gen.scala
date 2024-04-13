@@ -96,7 +96,7 @@ val variant = """
 def randomScala(i: Int) = s"""
 import weaver.*
 
-import chess.format.EpdFen
+import chess.format.FullFen
 import chess.variant.*
 
 object RandomPerftTests$i extends SimpleIOSuite:
@@ -127,7 +127,7 @@ def randomCi(i: Int) =
 def chess960Scala(i: Int) = s"""
 import weaver.*
 
-import chess.format.EpdFen
+import chess.format.FullFen
 import chess.variant.*
 
 object Chess960PerftTests$i extends SimpleIOSuite:
@@ -158,7 +158,7 @@ def chess960Ci(i: Int) =
 def trickyScala(i: Int) = s"""
 import weaver.*
 
-import chess.format.EpdFen
+import chess.format.FullFen
 import chess.variant.*
 
 object TrickyPerftTests$i extends SimpleIOSuite:

@@ -9,7 +9,7 @@ import fs2.data.csv.generic.semiauto.*
 import weaver.*
 
 import chess.format.Fen
-import chess.format.EpdFen
+import chess.format.FullFen
 import chess.variant.*
 
 import Common.given
@@ -33,10 +33,10 @@ object HordeInsufficientMaterialTests extends SimpleIOSuite:
       .through(text.utf8.decode)
       .through(decodeWithoutHeaders[Case]())
 
-  given CellDecoder[EpdFen] = CellDecoder[String].map(EpdFen(_))
+  given CellDecoder[FullFen] = CellDecoder[String].map(FullFen(_))
   given RowDecoder[Case]    = deriveRowDecoder
 
-case class Case(fen: EpdFen, expected: Boolean, comment: Option[String]) {
+case class Case(fen: FullFen, expected: Boolean, comment: Option[String]) {
   def run(variant: Variant): Boolean =
     val situation = Fen.read(variant, fen).get
     Horde.hasInsufficientMaterial(situation.board, !situation.color) == expected

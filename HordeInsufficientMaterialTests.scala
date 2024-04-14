@@ -34,7 +34,7 @@ object HordeInsufficientMaterialTests extends SimpleIOSuite:
       .through(decodeWithoutHeaders[Case]())
 
   given CellDecoder[FullFen] = CellDecoder[String].map(FullFen(_))
-  given RowDecoder[Case]    = deriveRowDecoder
+  given RowDecoder[Case]     = deriveRowDecoder
 
 case class Case(fen: FullFen, expected: Boolean, comment: Option[String]) {
   def run(variant: Variant): Boolean =

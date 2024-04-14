@@ -67,13 +67,15 @@ object Perft:
     perfts.parFoldMapA(perft(_, variant))
 
   private def perft(perft: Perft, variant: Variant): IO[Boolean] =
-    val situation = Fen.read(variant, perft.epd).getOrElse:
-      throw RuntimeException(s"Invalid fen: ${perft.epd} for variant: $variant")
+    val situation = Fen
+      .read(variant, perft.epd)
+      .getOrElse:
+        throw RuntimeException(s"Invalid fen: ${perft.epd} for variant: $variant")
 
-    perft.cases.parFoldMapA:c =>
+    perft.cases.parFoldMapA: c =>
       situation
         .perft(c.depth)
-        .map:result =>
+        .map: result =>
           if result != c.nodes then
             println(s"Error: ${perft.id} ${perft.epd} depth: ${c.depth} expected: ${c.nodes} result: $result")
           result == c.nodes
@@ -119,7 +121,7 @@ object PerftParser:
   private val comment = (P.caret.filter(_.col == 0) *> P.char('#')).endWith(R.lf)
   private val ignored = (comment | blank).void
 
-  private val id: P[String]  = "id".prefix
+  private val id: P[String]   = "id".prefix
   private val epd: P[FullFen] = "epd".prefix.map(FullFen.clean)
   private val testCase: P[TestCase] =
     ((nonNegative.map(_.toInt) <* P.char(' ')) ~ nonNegative.map(_.toLong)).map(TestCase.apply)

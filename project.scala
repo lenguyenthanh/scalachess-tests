@@ -1,6 +1,6 @@
 //> using scala 3.4.1
 //> using repository https://raw.githubusercontent.com/lichess-org/lila-maven/master
-//> using toolkit typelevel:0.1.23
+//> using toolkit typelevel:0.1.25
 //> using dep org.lichess::scalachess:16.0.2
 //> using dep org.typelevel::cats-parse::1.0.0
 //> using dep com.lihaoyi::os-lib:0.9.3

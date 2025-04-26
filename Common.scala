@@ -15,7 +15,6 @@ import chess.variant.Chess960
 import chess.variant.Variant
 import chess.variant.Crazyhouse
 import chess.{ MoveOrDrop, Situation }
-import chess.MoveOrDrop.*
 import chess.format.Fen
 
 import cats.syntax.all.*

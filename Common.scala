@@ -14,7 +14,7 @@ import chess.format.FullFen
 import chess.variant.Chess960
 import chess.variant.Variant
 import chess.variant.Crazyhouse
-import chess.{ MoveOrDrop, Situation }
+import chess.{ MoveOrDrop, Board }
 import chess.format.Fen
 
 import cats.syntax.all.*
@@ -77,7 +77,7 @@ object Perft:
             println(s"Error: ${perft.id} ${perft.epd} depth: ${c.depth} expected: ${c.nodes} result: $result")
           result == c.nodes
 
-  extension (s: Situation)
+  extension (s: Board)
 
     def perft(depth: Int): IO[Long] =
       if depth == 0 then IO(1L)
@@ -88,11 +88,11 @@ object Perft:
         else moves.foldMapA(_.situationAfter.perft(depth - 1))
 
     private def perftMoves: List[MoveOrDrop] =
-      if s.board.variant == chess.variant.Crazyhouse
+      if s.variant == chess.variant.Crazyhouse
       then Crazyhouse.legalMoves(s)
       else
         val legalMoves = s.legalMoves
-        if s.board.variant.chess960 then legalMoves
+        if s.variant.chess960 then legalMoves
         // if variant is not chess960 we need to deduplicated castlings moves
         // We filter out castling move that is Standard and king's dest is not in the rook position
         else legalMoves.filterNot(m => m.castle.exists(c => c.isStandard && m.dest != c.rook))
@@ -101,7 +101,7 @@ object Perft:
       Crazyhouse.legalMoves(s)
 
     // when calculate perft we don't do autoDraw
-    def perftEnd = s.checkMate || s.staleMate || s.variantEnd || s.board.variant.specialDraw(s)
+    def perftEnd = s.checkMate || s.staleMate || s.variantEnd || s.variant.specialDraw(s)
 
 import cats.syntax.all.*
 import cats.parse.{ LocationMap, Numbers as N, Parser as P, Parser0 as P0, Rfc5234 as R }

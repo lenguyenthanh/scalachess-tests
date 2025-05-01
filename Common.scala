@@ -33,7 +33,7 @@ case class DivideResult(val move: MoveOrDrop, nodes: Long):
 
 object Perft:
 
-  val randomSplit   = 13
+  val randomSplit   = 15
   val chess960Split = 19
 
   lazy val threeCheckPerfts  = read("resources/3check.perft")

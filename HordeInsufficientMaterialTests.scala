@@ -39,5 +39,5 @@ object HordeInsufficientMaterialTests extends SimpleIOSuite:
 case class Case(fen: FullFen, expected: Boolean, comment: Option[String]) {
   def run(variant: Variant): Boolean =
     val position = Fen.read(variant, fen).get
-    Horde.hasInsufficientMaterial(position, !position.color) == expected
+    Horde.hasInsufficientMaterial(position.board, !position.color) == expected
 }

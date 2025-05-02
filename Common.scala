@@ -14,7 +14,7 @@ import chess.format.FullFen
 import chess.variant.Chess960
 import chess.variant.Variant
 import chess.variant.Crazyhouse
-import chess.{ Board, MoveOrDrop }
+import chess.{ MoveOrDrop, Position }
 import chess.format.Fen
 
 import cats.syntax.all.*
@@ -66,20 +66,20 @@ object Perft:
     perfts.parFoldMapA(perft(_, variant))
 
   private def perft(perft: Perft, variant: Variant): IO[Boolean] =
-    val situation = Fen
+    val position = Fen
       .read(variant, perft.epd)
       .getOrElse:
         throw RuntimeException(s"Invalid fen: ${perft.epd} for variant: $variant")
 
     perft.cases.parFoldMapA: c =>
-      situation
+      position
         .perft(c.depth)
         .map: result =>
           if result != c.nodes then
             println(s"Error: ${perft.id} ${perft.epd} depth: ${c.depth} expected: ${c.nodes} result: $result")
           result == c.nodes
 
-  extension (s: Board)
+  extension (s: Position)
 
     def perft(depth: Int): IO[Long] =
       if depth == 0 then IO(1L)
@@ -87,7 +87,7 @@ object Perft:
       else
         val moves = s.perftMoves
         if depth == 1 then moves.size.toLong.pure[IO]
-        else moves.foldMapA(_.situationAfter.perft(depth - 1))
+        else moves.foldMapA(_.boardAfter.perft(depth - 1))
 
     private def perftMoves: List[MoveOrDrop] =
       if s.variant == chess.variant.Crazyhouse

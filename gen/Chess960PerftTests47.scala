@@ -1,6 +1,6 @@
-import weaver.*
+package chess
 
-import chess.format.FullFen
+import weaver.*
 import chess.variant.*
 
 object Chess960PerftTests47 extends SimpleIOSuite:

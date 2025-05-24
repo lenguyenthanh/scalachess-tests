@@ -1,3 +1,5 @@
+package chess
+
 import weaver.*
 
 import chess.format.FullFen

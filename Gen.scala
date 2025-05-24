@@ -1,12 +1,14 @@
-val gen = "gen"
+package chess
 
 object Gen:
+
+  val gen = "gen"
 
   import Perft.*
   def main(args: Array[String]): Unit =
     cleanup()
     write(os.pwd / ".github" / "workflows" / "insufficient.yml", prejob("insufficient", insufficient))
-    write(os.pwd / ".github" / "workflows" / "variant.yml", prejob("variant", variant))
+    write(os.pwd / ".github" / "workflows" / "variant.yml", prejob("variant", otherVariant))
     genRandomTests()
     genChess960Tests()
     genTrickyTests()
@@ -80,7 +82,7 @@ val insufficient = """
       run: scala-cli test -j 21 HordeInsufficientMaterialTests.scala Common.scala project.scala
 """
 
-val variant = """
+val otherVariant = """
   variant:
     runs-on: "ubuntu-latest"
     steps:
@@ -94,9 +96,9 @@ val variant = """
 """
 
 def randomScala(i: Int) = s"""
-import weaver.*
+package chess
 
-import chess.format.FullFen
+import weaver.*
 import chess.variant.*
 
 object RandomPerftTests$i extends SimpleIOSuite:
@@ -125,9 +127,9 @@ def randomCi(i: Int) =
   prejob(name, ci)
 
 def chess960Scala(i: Int) = s"""
-import weaver.*
+package chess
 
-import chess.format.FullFen
+import weaver.*
 import chess.variant.*
 
 object Chess960PerftTests$i extends SimpleIOSuite:
@@ -156,9 +158,9 @@ def chess960Ci(i: Int) =
   prejob(name, ci)
 
 def trickyScala(i: Int) = s"""
-import weaver.*
+package chess
 
-import chess.format.FullFen
+import weaver.*
 import chess.variant.*
 
 object TrickyPerftTests$i extends SimpleIOSuite:

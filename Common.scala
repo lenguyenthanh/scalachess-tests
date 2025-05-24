@@ -1,3 +1,5 @@
+package chess
+
 import cats.Monoid
 
 object Common:

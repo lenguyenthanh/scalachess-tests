@@ -87,7 +87,7 @@ object Perft:
       else
         val moves = s.perftMoves
         if depth == 1 then moves.size.toLong.pure[IO]
-        else moves.foldMapA(_.boardAfter.perft(depth - 1))
+        else moves.foldMapA(_.after.perft(depth - 1))
 
     private def perftMoves: List[MoveOrDrop] =
       if s.variant == chess.variant.Crazyhouse
@@ -98,9 +98,6 @@ object Perft:
         // if variant is not chess960 we need to deduplicated castlings moves
         // We filter out castling move that is Standard and king's dest is not in the rook position
         else legalMoves.filterNot(m => m.castle.exists(c => c.isStandard && m.dest != c.rook))
-
-    private def crazyhousePerftMoves: List[MoveOrDrop] =
-      Crazyhouse.legalMoves(s)
 
     // when calculate perft we don't do autoDraw
     def perftEnd = s.checkMate || s.staleMate || s.variantEnd || s.variant.specialDraw(s)

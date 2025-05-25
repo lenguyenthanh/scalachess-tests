@@ -65,9 +65,9 @@ object Perft:
 
   import Common.given
   def perfts(perfts: List[Perft], variant: Variant): IO[Boolean] =
-    perfts.parFoldMapA(perft(_, variant))
+    perfts.parFoldMapA(perft(variant))
 
-  private def perft(perft: Perft, variant: Variant): IO[Boolean] =
+  private def perft(variant: Variant)(perft: Perft): IO[Boolean] =
     val position = Fen
       .read(variant, perft.epd)
       .getOrElse:
@@ -97,7 +97,7 @@ object Perft:
       else
         val legalMoves = s.legalMoves
         if s.variant.chess960 then legalMoves
-        // if variant is not chess960 we need to deduplicated castlings moves
+        // if variant is not chess960 we need to deduplicate castlings moves
         // We filter out castling move that is Standard and king's dest is not in the rook position
         else legalMoves.filterNot(m => m.castle.exists(c => c.isStandard && m.dest != c.rook))
 

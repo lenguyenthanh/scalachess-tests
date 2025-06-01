@@ -1,6 +1,6 @@
 //> using repository jitpack
 //> using scala 3.7.0
-//> using dep com.github.lenguyenthanh.scalachess::scalachess:fb7f53939e
+//> using dep com.github.lichess-org.scalachess::scalachess:17.7.4
 //> using dep org.typelevel::cats-effect:3.6.1
 //> using dep co.fs2::fs2-io:3.12.0
 //> using dep org.gnieh::fs2-data-csv:1.12.0
